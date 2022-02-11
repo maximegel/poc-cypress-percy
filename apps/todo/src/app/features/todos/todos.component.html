@@ -1,0 +1,78 @@
+<div class="container mx-auto h-full">
+  <section class="todoapp">
+    <header class="header">
+      <h1>todos</h1>
+      <input
+        class="new-todo"
+        placeholder="What needs to be done?"
+        autofocus
+        [(ngModel)]="newTodoTitle"
+        (keyup.enter)="onAdd()"
+        data-testid="new-todo-textbox"
+      />
+    </header>
+    <section class="main" *ngIf="model?.length" data-testid="todo-list-body">
+      <input
+        #toggleAllCheckbox
+        id="toggle-all"
+        class="toggle-all"
+        type="checkbox"
+        *ngIf="model?.length"
+        [checked]="allCompleted"
+        (click)="onToggleAll(toggleAllCheckbox.checked)"
+      />
+      <ul class="todo-list">
+        <li
+          *ngFor="let item of model"
+          [class.completed]="item.completed"
+          [class.editing]="item.editing"
+          data-testid="todo-line"
+        >
+          <div class="view">
+            <input
+              class="toggle"
+              type="checkbox"
+              (click)="onToggle(item)"
+              [checked]="item.completed"
+            />
+            <label (dblclick)="onBeginEditing(item)">{{ item.title }}</label>
+            <button class="destroy" (click)="onRemove(item)"></button>
+          </div>
+          <input
+            #editInput
+            class="edit"
+            *ngIf="item.editing"
+            [value]="item.title"
+            (blur)="onCompleteEditing(item, editInput.value)"
+            (keyup.enter)="onCompleteEditing(item, editInput.value)"
+            (keyup.escape)="onCancelEditing(item)"
+          />
+        </li>
+      </ul>
+    </section>
+    <footer class="footer" *ngIf="model?.length">
+      <span class="todo-count"
+        ><strong>{{ remainingCount }}</strong>
+        {{ remainingCount === 1 ? 'item' : 'items' }} left</span
+      >
+      <button
+        class="clear-completed"
+        *ngIf="completedCount > 0"
+        (click)="onClearAllCompleted()"
+      >
+        Clear completed
+      </button>
+    </footer>
+  </section>
+  <div>
+    <footer class="info" data-testid="todo-list-footer">
+      <p>Double-click to edit a todo</p>
+      <p>
+        Created by
+        <a href="http://github.com/maximegel">Maxime Gélinas</a> using
+        <a href="http://angular.io">Angular</a>
+      </p>
+      <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+    </footer>
+  </div>
+</div>

@@ -41,6 +41,10 @@
       "unitTestRunner": "jest"
     },
     "@nrwl/angular:component": {
+      "changeDetection": "OnPush",
+      "displayBlock": true,
+      "export": true,
+      "skipTests": true,
       "style": "scss"
     }
   },

@@ -2,7 +2,7 @@
   "projectType": "application",
   "root": "apps/todo",
   "sourceRoot": "apps/todo/src",
-  "prefix": "poc-cypress-percy",
+  "prefix": "app",
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
@@ -15,7 +15,11 @@
         "tsConfig": "apps/todo/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": ["apps/todo/src/favicon.ico", "apps/todo/src/assets"],
-        "styles": ["apps/todo/src/styles.scss"],
+        "styles": [
+          "node_modules/todomvc-common/base.css",
+          "node_modules/todomvc-app-css/index.css",
+          "apps/todo/src/styles.scss"
+        ],
         "scripts": []
       },
       "configurations": {
