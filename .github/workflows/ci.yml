@@ -1,0 +1,50 @@
+name: CI
+on: push
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Resolve cache directories
+        id: cache-dirs
+        run: echo "::set-output name=yarn::$(yarn cache dir)"
+
+      - name: Restore cache
+        id: restore-cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/Cypress
+            ${{ steps.cache-dirs.outputs.yarn }}
+          key: ${{ runner.os }}
+          restore-keys: |
+            ${{ runner.os }}
+
+      - name: Restore dependencies
+        id: restore-deps
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        if: steps.restore-deps.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+
+      - name: Run E2E tests
+        run: yarn e2e:ci
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
